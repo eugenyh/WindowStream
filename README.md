@@ -80,19 +80,19 @@ It was built for a concrete need — showing a map application running on a work
 
 ```
           Windows PC                                            Viewer (tablet / phone / PC)
- ┌──────────────────────────────────────────────────┐        ┌───────────────────────────┐
- │  target window                                   │        │  browser                  │
- │       │  screen copy (mss)  or  PrintWindow      │        │   GET /          (page)   │
- │       ▼                                          │        │   GET /status    (1 Hz)   │
- │  capture thread ──► CRC32 changed? ──► JPEG      │  HTTP  │   GET /stream    (MJPEG)  │
- │                                        │         │ ─────► │        │                  │
- │                                        ▼         │        │        ▼                  │
- │                                  FrameBuffer     │        │  parse frames, show, zoom │
- │                                        │         │        └───────────────────────────┘
- │                     HTTP server threads (one per viewer)
- │                                                  │
- │  tray icon (main thread) ◄─► Broadcaster (start / pause / stop, window switching)
- └──────────────────────────────────────────────────┘
+ ┌─────────────────────────────────────────────────────────────────────────────────────┐        ┌───────────────────────────┐
+ │  target window                                                                      │        │  browser                  │
+ │       │  screen copy (mss)  or  PrintWindow                                         │        │   GET /          (page)   │
+ │       ▼                                                                             │        │   GET /status    (1 Hz)   │
+ │  capture thread ──► CRC32 changed? ──► JPEG                                         │  HTTP  │   GET /stream    (MJPEG)  │
+ │                                        │                                            │ ─────► │        │                  │
+ │                                        ▼                                            │        │        ▼                  │
+ │                                  FrameBuffer                                        │        │  parse frames, show, zoom │
+ │                                        │                                            │        └───────────────────────────┘
+ │                     HTTP server threads (one per viewer)                            │
+ │                                                                                     │                           
+ │  tray icon (main thread) ◄─► Broadcaster (start / pause / stop, window switching)   │
+ └─────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Threads**
@@ -542,4 +542,4 @@ The web viewer is a single self-contained HTML document embedded in the script a
 
 ## License
 
-No license has been specified yet. Add a `LICENSE` file before publishing the repository.
+MIT License. 
