@@ -30,6 +30,7 @@ Thumbs.db
 
 #pyinstaller
 *.spec
+.build
 
 #text
 *.txt
