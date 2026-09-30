@@ -210,7 +210,7 @@ I18N = {
 }
 
 
-def T(key, **kw):
+def T(key, /, **kw):
     """Translated string for the current interface language (English fallback)."""
     text = I18N.get(LANG, I18N["en"]).get(key) or I18N["en"][key]
     return text.format(**kw) if kw else text
