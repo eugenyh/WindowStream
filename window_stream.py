@@ -20,6 +20,7 @@ View-only: the client cannot control anything.
 __version__ = "1.0.0"  # keep in sync with the release tag (vX.Y.Z)
 
 import argparse
+import atexit
 import ctypes
 import html
 import json
@@ -33,7 +34,7 @@ import time
 import winreg
 import zlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from io import BytesIO
+from io import BytesIO, StringIO
 
 import mss
 import pystray
@@ -1256,16 +1257,67 @@ def message_box(text, title=None):
         print(text)
 
 
-def attach_console():
-    """An exe built without a console has no stdout. For --list and --help we attach
-    to the console it was launched from (if there is one)."""
-    if sys.stdout is not None:
-        return
+class _PROCESSENTRY32W(ctypes.Structure):
+    _fields_ = [
+        ("dwSize", ctypes.c_uint32), ("cntUsage", ctypes.c_uint32),
+        ("th32ProcessID", ctypes.c_uint32), ("th32DefaultHeapID", ctypes.c_size_t),
+        ("th32ModuleID", ctypes.c_uint32), ("cntThreads", ctypes.c_uint32),
+        ("th32ParentProcessID", ctypes.c_uint32), ("pcPriClassBase", ctypes.c_long),
+        ("dwFlags", ctypes.c_uint32), ("szExeFile", ctypes.c_wchar * 260),
+    ]
+
+
+def _parent_pids():
+    """Ids of this process's ancestors, nearest first (empty list if they cannot be read).
+    A --onefile exe is started through a bootloader process that owns no console, so the console
+    we were launched from belongs to one of the ancestors further up the chain."""
+    k32 = ctypes.windll.kernel32
+    k32.CreateToolhelp32Snapshot.restype = ctypes.c_void_p
+    k32.CreateToolhelp32Snapshot.argtypes = [ctypes.c_uint32, ctypes.c_uint32]
+    k32.Process32FirstW.argtypes = [ctypes.c_void_p, ctypes.POINTER(_PROCESSENTRY32W)]
+    k32.Process32NextW.argtypes = [ctypes.c_void_p, ctypes.POINTER(_PROCESSENTRY32W)]
+    snap = k32.CreateToolhelp32Snapshot(0x2, 0)  # TH32CS_SNAPPROCESS
+    if not snap or snap == ctypes.c_void_p(-1).value:
+        return []
+    parents = {}
     try:
-        if ctypes.windll.kernel32.AttachConsole(0xFFFFFFFF):  # ATTACH_PARENT_PROCESS
-            sys.stdout = sys.stderr = open("CONOUT$", "w", encoding="utf-8")
+        entry = _PROCESSENTRY32W()
+        entry.dwSize = ctypes.sizeof(entry)
+        ok = k32.Process32FirstW(snap, ctypes.byref(entry))
+        for _ in range(16384):  # safety cap
+            if not ok:
+                break
+            parents[entry.th32ProcessID] = entry.th32ParentProcessID
+            ok = k32.Process32NextW(snap, ctypes.byref(entry))
+    finally:
+        k32.CloseHandle(snap)
+    chain, pid = [], os.getpid()
+    while pid in parents and len(chain) < 16:
+        pid = parents[pid]
+        if not pid or pid in chain:
+            break
+        chain.append(pid)
+    return chain
+
+
+def attach_console():
+    """An exe built without a console has no stdout. For --list, --help and --version we attach
+    to the console it was launched from. Returns True if output can be shown there
+    (or stdout is already usable, e.g. redirected to a file)."""
+    if sys.stdout is not None:
+        return True
+    try:
+        try:
+            candidates = [0xFFFFFFFF] + _parent_pids()  # ATTACH_PARENT_PROCESS first, then ancestors
+        except Exception:
+            candidates = [0xFFFFFFFF]
+        for pid in candidates:
+            if ctypes.windll.kernel32.AttachConsole(pid):
+                sys.stdout = sys.stderr = open("CONOUT$", "w", encoding="utf-8", buffering=1)
+                return True
     except Exception:
         pass
+    return False
 
 
 class TrayIcon(pystray.Icon):
@@ -1285,7 +1337,10 @@ class TrayIcon(pystray.Icon):
 def main():
     global LANG
     if any(a in sys.argv for a in ("--list", "--version", "-h", "--help")):
-        attach_console()
+        if not attach_console():
+            # No console to print to (e.g. started by double click): show the text in a message box
+            captured = sys.stdout = sys.stderr = StringIO()
+            atexit.register(lambda: captured.getvalue().strip() and message_box(captured.getvalue()))
     # The interface language comes from the settings file, so find the file before building the parser
     pre = argparse.ArgumentParser(add_help=False)
     pre.add_argument("--config")
