@@ -1135,7 +1135,7 @@ SETTINGS = {
     "fps": _S(10.0, float, from_file=True),
     "quality": _S(75, int, from_file=True),
     "scale": _S(1.0, float, from_file=True),
-    "mode": _S("screen", str, from_file=True),  # screen or printwindow
+    "mode": _S("printwindow", str, from_file=True),  # screen or printwindow
     "no_diff": _S(False, _to_bool),
     "no_turbo": _S(False, _to_bool),
     "autostart_broadcast": _S(True, _to_bool, saved=False),  # start broadcasting when the program starts
