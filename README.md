@@ -296,7 +296,7 @@ WindowStream.exe [options]
 | `--fps N` | `10` | Maximum captured frames per second (minimum 0.5). |
 | `--quality N` | `75` | JPEG quality, clamped to 1–95. |
 | `--scale X` | `1.0` | Scale factor of the sent frame (minimum 0.1); e.g. `0.5`. |
-| `--mode screen\|printwindow` | `screen` | [Capture mode](#capture-modes). |
+| `--mode screen\|printwindow` | `printwindow` | [Capture mode](#capture-modes). |
 | `--no-diff` | off | Disable change detection: encode and send every captured frame. |
 | `--no-turbo` | off | Force the Pillow JPEG encoder (for comparison). |
 | `--no-autostart` | off | Do **not** start broadcasting on launch; wait for the menu. (Unrelated to *Start with Windows*.) |
@@ -335,7 +335,7 @@ Location: `%APPDATA%\WindowStream\settings.json`. It is created on the first run
 | `fps` | number | `10` | Maximum captured frames per second. |
 | `quality` | integer | `75` | JPEG quality 1–95. |
 | `scale` | number | `1.0` | Frame scale. |
-| `mode` | string | `"screen"` | `"screen"` or `"printwindow"`. |
+| `mode` | string | `"printwindow"` | `"screen"` or `"printwindow"`. |
 | `no_diff` | boolean | `false` | Disable change detection. |
 | `no_turbo` | boolean | `false` | Force Pillow encoder. |
 | `autostart_broadcast` | boolean | `true` | Begin broadcasting right after the program starts. |
@@ -375,7 +375,7 @@ To stream two windows at once, run two copies with **different** `--config` file
 
 ## Capture modes
 
-| | `screen` (default) | `printwindow` |
+| | `screen` | `printwindow` (default) |
 | --- | --- | --- |
 | How | Copies the window rectangle from the screen (`mss`) | Calls `PrintWindow` with `PW_CLIENTONLY \| PW_RENDERFULLCONTENT` |
 | Other windows on top | **Appear in the stream** | Do not appear |
@@ -384,7 +384,7 @@ To stream two windows at once, run two copies with **different** `--config` file
 | Minimized window | Not captured | Not captured |
 | Part of the window outside the screen | Not painted by Windows | Not repainted by the application (stays frozen) |
 
-Recommendation: try `printwindow` first (`--mode printwindow --save`); if the picture is black or wrong for your application, use `screen` and keep the window in front. When you select a window from the tray menu, it is restored and brought to the front automatically, which matters for `screen` mode.
+Recommendation: `printwindow` is the default; if the picture is black or wrong for your application, use `screen` (`--mode screen --save`) and keep the window in front. When you select a window from the tray menu, it is restored and brought to the front automatically, which matters for `screen` mode.
 
 The captured area is always the **client area** (without the title bar and borders), at real pixel size (the process is DPI-aware).
 

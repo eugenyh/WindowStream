@@ -260,7 +260,7 @@ Halten Sie das JSON-Format ein: Zeichenketten in doppelten Anführungszeichen, K
 | `fps` | `10` | Maximale Bilder pro Sekunde (nicht weniger als 0,5). Je höher, desto flüssiger und desto höher die Last. |
 | `quality` | `75` | JPEG-Qualität von 1 bis 95. Höher ist schärfer, belastet aber das Netzwerk stärker. |
 | `scale` | `1.0` | Skalierung des übertragenen Bilds (nicht weniger als 0,1). `0.5` ist an jeder Seite halb so groß. |
-| `mode` | `"screen"` | Aufnahmemodus: `"screen"` oder `"printwindow"` ([Abschnitt 10](#10-aufnahmemodi-screen-und-printwindow)). |
+| `mode` | `"printwindow"` | Aufnahmemodus: `"screen"` oder `"printwindow"` ([Abschnitt 10](#10-aufnahmemodi-screen-und-printwindow)). |
 | `no_diff` | `false` | `true` — Änderungserkennung ausschalten und jedes Bild senden (erhöht die Last, meist unnötig). |
 | `no_turbo` | `false` | `true` — den schnellen JPEG-Encoder nicht verwenden (nur für Vergleiche nötig). |
 | `autostart_broadcast` | `true` | `false` — die Übertragung nicht direkt nach dem Programmstart beginnen, sondern auf den Befehl **Start broadcast** im Menü warten. |
@@ -282,7 +282,7 @@ Halten Sie das JSON-Format ein: Zeichenketten in doppelten Anführungszeichen, K
 
 Der Parameter `mode` legt fest, wie das Programm das Fensterbild erhält.
 
-| | `screen` (Standard) | `printwindow` |
+| | `screen` | `printwindow` (Standard) |
 | --- | --- | --- |
 | Prinzip | Kopiert das Rechteck des Fensters vom Bildschirm | Bittet das Fenster selbst, seinen Inhalt zu zeichnen |
 | Andere Fenster über dem gewünschten | **Erscheinen in der Übertragung** | Erscheinen nicht |
@@ -292,8 +292,8 @@ Der Parameter `mode` legt fest, wie das Programm das Fensterbild erhält.
 
 **So wählen Sie den Modus:**
 
-1. Probieren Sie zuerst `"printwindow"`. Ist das Bild korrekt, behalten Sie diesen Modus: Andere Fenster gelangen dann nicht mehr in die Übertragung.
-2. Ist das Bild schwarz oder aktualisiert es sich nicht, wechseln Sie zurück zu `"screen"`. In diesem Modus halten Sie das Fenster im Vordergrund und achten darauf, dass nichts es verdeckt. Bei der Fensterwahl im Menü bringt das Programm das Fenster selbst nach vorn, und der Punkt **Bring window to front** tut das jederzeit.
+1. Standard ist `"printwindow"`. Ist das Bild korrekt, behalten Sie diesen Modus: Andere Fenster gelangen dann nicht mehr in die Übertragung.
+2. Ist das Bild schwarz oder aktualisiert es sich nicht, wechseln Sie zu `"screen"`. In diesem Modus halten Sie das Fenster im Vordergrund und achten darauf, dass nichts es verdeckt. Bei der Fensterwahl im Menü bringt das Programm das Fenster selbst nach vorn, und der Punkt **Bring window to front** tut das jederzeit.
 
 Übertragen wird immer der **Clientbereich des Fensters** (ohne Titelleiste und Rahmen) in seiner realen Größe in Pixeln.
 

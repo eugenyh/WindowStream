@@ -15,7 +15,7 @@ EXPECTED_DEFAULTS = {
     "fps": 10.0,
     "quality": 75,
     "scale": 1.0,
-    "mode": "screen",
+    "mode": "printwindow",
     "no_diff": False,
     "no_turbo": False,
     "autostart_broadcast": True,
