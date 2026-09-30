@@ -535,6 +535,7 @@ window_stream.py    the whole application (single file)
 requirements.txt    runtime dependencies (CRLF line endings)
 build_exe.bat       PyInstaller build script (CRLF line endings)
 make_icon.py        generates icon.ico for the executable
+tests/              unit tests (standard library only, run on any OS)
 README.md           this file
 user_manual_ru.md   user manual for the ready-made exe (Russian)
 user_manual_en.md   user manual for the ready-made exe (English)
@@ -555,13 +556,21 @@ Main parts of `window_stream.py`:
 | `PAGE`, `page_for` | The embedded web viewer (HTML/CSS/JS with `@@key@@` tokens) and the title/language injection |
 | `make_handler` | HTTP routes: `/`, `/status`, `/snapshot.jpg`, `/stream` |
 | `Broadcaster` | Start / pause / stop, threads, per-second statistics |
-| `load_settings`, `save_settings` | JSON settings with type coercion and defaults |
+| `SETTINGS`, `load_settings`, `save_settings` | One schema per setting (default, cast, whether it is saved); defaults and key lists are derived from it |
 | `autostart_*`, `set_autostart` | Registry-based *Start with Windows* |
 | `acquire_single_instance` | Named-mutex guard |
 | `TrayIcon` | `pystray.Icon` subclass that rebuilds the menu right before it is shown (pystray builds the Windows menu only once), so the window list and check marks are always current |
 | `main` | Argument parsing, precedence rules, tray menu wiring |
 
 The web viewer is a single self-contained HTML document embedded in the script as a raw string; it can be edited in place. `page_for()` replaces the `<title>Map</title>` placeholder and the `@@…@@` tokens, so keep those placeholders intact when editing `PAGE`.
+
+### Tests
+
+```
+python -m unittest discover -s tests -v
+```
+
+The tests cover the pure logic (interface strings in both languages, the web page, settings, frame buffer, window matching). Windows-only modules are stubbed on other systems, so no extra packages are needed.
 
 ---
 

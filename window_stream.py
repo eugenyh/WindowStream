@@ -35,6 +35,7 @@ import winreg
 import zlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from io import BytesIO, StringIO
+from typing import Callable, NamedTuple
 
 import mss
 import pystray
@@ -210,7 +211,7 @@ I18N = {
 }
 
 
-def T(key, **kw):
+def T(key, /, **kw):
     """Translated string for the current interface language (English fallback)."""
     text = I18N.get(LANG, I18N["en"]).get(key) or I18N["en"][key]
     return text.format(**kw) if kw else text
@@ -1114,30 +1115,35 @@ STATE_KEY = {STOPPED: "state_stopped", RUNNING: "state_running", PAUSED: "state_
 
 
 # ---------- settings file ----------
-DEFAULT_SETTINGS = {
-    "title": "",                  # window title (or part of it) to stream
-    "process": "",                # exe name of the window: helps find it when the title changes
-    "port": 8080,
-    "fps": 10.0,
-    "quality": 75,
-    "scale": 1.0,
-    "mode": "screen",             # screen or printwindow
-    "no_diff": False,
-    "no_turbo": False,
-    "autostart_broadcast": True,  # start broadcasting right when the program starts
-    "language": "en",             # interface language: en or ru
-}
-
-
 def _to_bool(v):
     return v if isinstance(v, bool) else str(v).strip().lower() in ("1", "true", "yes", "on", "да")
 
 
-_SETTING_TYPES = {
-    "title": str, "process": str, "port": int, "fps": float, "quality": int, "scale": float,
-    "mode": str, "no_diff": _to_bool, "no_turbo": _to_bool, "autostart_broadcast": _to_bool,
-    "language": str,
+class _S(NamedTuple):
+    """One setting: default value, cast for values read from the file, and how main() treats it."""
+    default: object
+    cast: Callable
+    saved: bool = True      # main() writes the effective command-line value back to the file
+    from_file: bool = False  # a command-line option left unset takes its value from the file
+
+
+# The single description of every setting; everything below is derived from it.
+SETTINGS = {
+    "title": _S("", str, from_file=True),      # window title (or part of it) to stream
+    "process": _S("", str),                    # exe name of the window: helps find it when the title changes
+    "port": _S(8080, int, from_file=True),
+    "fps": _S(10.0, float, from_file=True),
+    "quality": _S(75, int, from_file=True),
+    "scale": _S(1.0, float, from_file=True),
+    "mode": _S("screen", str, from_file=True),  # screen or printwindow
+    "no_diff": _S(False, _to_bool),
+    "no_turbo": _S(False, _to_bool),
+    "autostart_broadcast": _S(True, _to_bool, saved=False),  # start broadcasting when the program starts
+    "language": _S("en", str, saved=False),    # interface language: en or ru
 }
+DEFAULT_SETTINGS = {k: v.default for k, v in SETTINGS.items()}
+SAVED_SETTINGS = tuple(k for k, v in SETTINGS.items() if v.saved)
+CLI_VALUE_SETTINGS = tuple(k for k, v in SETTINGS.items() if v.from_file)
 
 
 def default_config_path():
@@ -1155,10 +1161,10 @@ def load_settings(path):
     except Exception as e:
         print(T("settings_read_failed", path=path, err=e))
         return s
-    for key, cast in _SETTING_TYPES.items():
+    for key, spec in SETTINGS.items():
         if key in data:
             try:
-                s[key] = cast(data[key])
+                s[key] = spec.cast(data[key])
             except (TypeError, ValueError):
                 print(T("setting_invalid", key=key))
     if s["mode"] not in ("screen", "printwindow"):
@@ -1382,7 +1388,7 @@ def main():
         args.process = settings["process"]
     else:
         args.process = ""  # title set manually - the process from the file does not apply to it
-    for key in ("title", "port", "fps", "quality", "scale", "mode"):
+    for key in CLI_VALUE_SETTINGS:
         if getattr(args, key) is None:
             setattr(args, key, settings[key])
     args.no_diff = args.no_diff or settings["no_diff"]
@@ -1393,7 +1399,7 @@ def main():
     args.scale = max(0.1, args.scale)
 
     if args.save or not os.path.exists(cfg_path):
-        for key in ("title", "process", "port", "fps", "quality", "scale", "mode", "no_diff", "no_turbo"):
+        for key in SAVED_SETTINGS:
             settings[key] = getattr(args, key)
         if save_settings(cfg_path, settings):
             print(T("settings_saved"), cfg_path)
