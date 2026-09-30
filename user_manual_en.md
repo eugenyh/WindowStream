@@ -260,7 +260,7 @@ Keep to the JSON format: strings in double quotes, commas between parameters, no
 | `fps` | `10` | Maximum frames per second (not less than 0.5). The higher, the smoother and the higher the load. |
 | `quality` | `75` | JPEG quality from 1 to 95. Higher is sharper but heavier for the network. |
 | `scale` | `1.0` | Scale of the transmitted frame (not less than 0.1). `0.5` is half the size along each side. |
-| `mode` | `"screen"` | Capture mode: `"screen"` or `"printwindow"` ([section 10](#10-capture-modes-screen-and-printwindow)). |
+| `mode` | `"printwindow"` | Capture mode: `"screen"` or `"printwindow"` ([section 10](#10-capture-modes-screen-and-printwindow)). |
 | `no_diff` | `false` | `true` — disable change detection and send every frame (increases the load, usually not needed). |
 | `no_turbo` | `false` | `true` — do not use the fast JPEG encoder (only needed for comparison). |
 | `autostart_broadcast` | `true` | `false` — do not start broadcasting right after the program starts, but wait for the **Start broadcast** command in the menu. |
@@ -282,7 +282,7 @@ If the picture in the window does not change, the program hardly loads the compu
 
 The `mode` parameter determines how the program obtains the window picture.
 
-| | `screen` (default) | `printwindow` |
+| | `screen` | `printwindow` (default) |
 | --- | --- | --- |
 | Principle | Copies the window's rectangle from the screen | Asks the window itself to draw its contents |
 | Other windows on top of the needed one | **Appear in the broadcast** | Do not appear |
@@ -292,8 +292,8 @@ The `mode` parameter determines how the program obtains the window picture.
 
 **How to choose:**
 
-1. First try `"printwindow"`. If the picture is correct, keep this mode: other windows will no longer get into the broadcast.
-2. If the picture is black or does not update, go back to `"screen"`. In this mode keep the window in the foreground and make sure nothing covers it. When you choose a window from the menu, the program brings it to the front by itself, and the **Bring window to front** item does this at any time.
+1. The default is `"printwindow"`. If the picture is correct, keep this mode: other windows will no longer get into the broadcast.
+2. If the picture is black or does not update, switch to `"screen"`. In this mode keep the window in the foreground and make sure nothing covers it. When you choose a window from the menu, the program brings it to the front by itself, and the **Bring window to front** item does this at any time.
 
 What is always broadcast is the **client area of the window** (without the title bar and borders), at its real size in pixels.
 
