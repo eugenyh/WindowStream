@@ -48,6 +48,19 @@ class SettingsTests(unittest.TestCase):
     def test_defaults_are_unchanged(self):
         self.assertEqual(EXPECTED_DEFAULTS, ws.DEFAULT_SETTINGS)
 
+    def test_schema_derived_sets(self):
+        self.assertEqual(set(EXPECTED_DEFAULTS), set(ws.SETTINGS))
+        self.assertEqual(
+            ("title", "process", "port", "fps", "quality", "scale", "mode", "no_diff", "no_turbo"),
+            ws.SAVED_SETTINGS)
+        self.assertEqual(("title", "port", "fps", "quality", "scale", "mode"), ws.CLI_VALUE_SETTINGS)
+
+    def test_every_saved_or_cli_setting_is_a_command_line_option(self):
+        import inspect
+        src = inspect.getsource(ws.main)
+        for key in ws.CLI_VALUE_SETTINGS:
+            self.assertIn("--" + key.replace("_", "-"), src, key)
+
     def test_missing_file_gives_defaults_and_a_copy(self):
         settings, out = self.load()
         self.assertEqual(EXPECTED_DEFAULTS, settings)
