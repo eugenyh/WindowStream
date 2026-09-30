@@ -33,9 +33,11 @@ Thumbs.db
 
 # Build
 build/
+dist/
 
 #text
 *.txt
+!requirements.txt
 
 #signal files
 *.cs8
