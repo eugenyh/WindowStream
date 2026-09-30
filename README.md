@@ -305,7 +305,7 @@ WindowStream.exe [options]
 | `-h`, `--help` | — | Show help (in the interface language). |
 | `--version` | — | Print the program version and exit. |
 
-In the windowed `.exe` there is no console of its own: `--list`, `--help` and `--version` attach to the console they were started from.
+In the windowed `.exe` there is no console of its own: `--list`, `--help` and `--version` attach to the console they were started from (the program looks for it up the chain of parent processes, because a `--onefile` exe is started through a bootloader). The exe is a windowed program, so `cmd.exe` does not wait for it and the prompt may return before the text appears; use `start /wait "" WindowStream.exe --list` to wait. If no console is found (for example, started by double-click), the text is shown in a message box.
 
 ### Settings file
 

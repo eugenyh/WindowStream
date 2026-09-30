@@ -345,7 +345,7 @@ Das kompilierte Programm hat kein eigenes Konsolenfenster, daher geben `--list`,
 WindowStream.exe --list
 ```
 
-Startet man diesen Befehl per Doppelklick, gibt es keinen Ort, an dem der Text angezeigt werden könnte.
+Die Eingabeaufforderung kann früher zurückkehren, als der Text erscheint, weil das Programm eine Fensteranwendung ist. Damit sie wartet, verwenden Sie `start /wait "" WindowStream.exe --list`. Gibt es keine Konsole für die Ausgabe (zum Beispiel beim Start per Doppelklick), wird der Text in einem Meldungsfenster angezeigt.
 
 ## 12. Mit Windows starten
 
