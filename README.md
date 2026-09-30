@@ -150,7 +150,7 @@ It was built for a concrete need — showing a map application running on a work
 ### Option B — from source
 
 ```bat
-git clone <your-repository-url>
+git clone https://github.com/eugenyh/WindowStream.git
 cd WindowStream
 
 python -m venv .venv
@@ -444,7 +444,7 @@ Timing constants: server keep-alive 5 s; page polls `/status` every 1 s; stream 
 
 Build on Windows (PyInstaller cannot cross-compile).
 
-1. Install the runtime dependencies (see [Installation](#option-b--from-source)) and, ideally, libjpeg-turbo at `C:\libjpeg-turbo64`.
+1. Install the runtime dependencies (see [Installation](#option-b--from-source)) and, ideally, libjpeg-turbo at `C:\libjpeg-turbo64` (`build_exe.bat` also looks in `D:\libjpeg-turbo64`).
 2. Put `window_stream.py`, `build_exe.bat` and `make_icon.py` in one folder and run:
 
 ```bat
