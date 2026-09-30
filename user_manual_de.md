@@ -333,12 +333,13 @@ WindowStream.exe --title "Untitled - Map" --mode printwindow --save
 | `--config "Pfad"` | Eine andere Einstellungsdatei verwenden. |
 | `--save` | Die Parameter dieses Starts in der Einstellungsdatei speichern. |
 | `--help` | Hilfe zu den Schaltern. |
+| `--version` | Programmversion anzeigen und beenden. |
 
 **Vorrang.** Kommandozeilenschalter haben Vorrang vor der Einstellungsdatei, gelangen aber nicht von selbst in die Datei, wenn Sie nicht `--save` angeben. Umschalter (`--no-diff`, `--no-turbo`) lassen sich nur einschalten; um einen solchen Parameter auszuschalten, ändern Sie die Einstellungsdatei.
 
 ### Liste der Fenster
 
-Das kompilierte Programm hat kein eigenes Konsolenfenster, daher geben `--list` und `--help` ihren Text in **der Eingabeaufforderung aus, aus der sie gestartet wurden**:
+Das kompilierte Programm hat kein eigenes Konsolenfenster, daher geben `--list`, `--help` und `--version` ihren Text in **der Eingabeaufforderung aus, aus der sie gestartet wurden**:
 
 ```
 WindowStream.exe --list

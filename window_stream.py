@@ -17,6 +17,8 @@ Tray menu: Start / Pause / Stop broadcast, window selection, autostart with Wind
 Standalone exe build: build_exe.bat (PyInstaller).
 View-only: the client cannot control anything.
 """
+__version__ = "1.0.0"  # keep in sync with the release tag (vX.Y.Z)
+
 import argparse
 import ctypes
 import html
@@ -106,6 +108,7 @@ I18N = {
         "help_no_turbo": "do not use TurboJPEG, encode with Pillow (for comparison)",
         "help_config": "path to the settings file",
         "help_save": "write this run's parameters to the settings file",
+        "help_version": "show the program version and exit",
         "enc_pillow_off": "JPEG encoder: Pillow (disabled by --no-turbo)",
         "enc_turbo": "JPEG encoder: TurboJPEG",
         "enc_pillow_unavail": "JPEG encoder: Pillow (TurboJPEG unavailable: {err})",
@@ -173,6 +176,7 @@ I18N = {
         "help_no_turbo": "не использовать TurboJPEG, кодировать через Pillow (для сравнения)",
         "help_config": "путь к файлу настроек",
         "help_save": "записать параметры этого запуска в файл настроек",
+        "help_version": "показать версию программы и выйти",
         "enc_pillow_off": "Кодировщик JPEG: Pillow (отключено ключом --no-turbo)",
         "enc_turbo": "Кодировщик JPEG: TurboJPEG",
         "enc_pillow_unavail": "Кодировщик JPEG: Pillow (TurboJPEG недоступен: {err})",
@@ -1280,7 +1284,7 @@ class TrayIcon(pystray.Icon):
 
 def main():
     global LANG
-    if any(a in sys.argv for a in ("--list", "-h", "--help")):
+    if any(a in sys.argv for a in ("--list", "--version", "-h", "--help")):
         attach_console()
     # The interface language comes from the settings file, so find the file before building the parser
     pre = argparse.ArgumentParser(add_help=False)
@@ -1304,6 +1308,7 @@ def main():
     p.add_argument("--no-turbo", action="store_true", help=T("help_no_turbo"))
     p.add_argument("--config", help=T("help_config"))
     p.add_argument("--save", action="store_true", help=T("help_save"))
+    p.add_argument("--version", action="version", version=f"WindowStream {__version__}", help=T("help_version"))
     args = p.parse_args()
 
     if args.list:

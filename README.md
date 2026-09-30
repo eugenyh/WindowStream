@@ -143,8 +143,9 @@ It was built for a concrete need — showing a map application running on a work
 
 ### Option A — prebuilt executable
 
-1. Put `WindowStream.exe` in a permanent folder (for example `C:\Tools\WindowStream\`). Do not run it from a temporary or *Downloads* folder if you plan to use *Start with Windows*.
-2. Run it. On first start Windows may show a SmartScreen warning (the file is not code-signed) and a firewall prompt — allow access on **private** networks.
+1. Download `WindowStream.exe` from the [latest release](https://github.com/eugenyh/WindowStream/releases/latest) (each release lists a SHA-256 checksum; `--version` shows the version you have).
+2. Put it in a permanent folder (for example `C:\Tools\WindowStream\`). Do not run it from a temporary or *Downloads* folder if you plan to use *Start with Windows*.
+3. Run it. On first start Windows may show a SmartScreen warning (the file is not code-signed) and a firewall prompt — allow access on **private** networks.
 
 ### Option B — from source
 
@@ -302,8 +303,9 @@ WindowStream.exe [options]
 | `--config PATH` | `%APPDATA%\WindowStream\settings.json` | Use another settings file. |
 | `--save` | off | Write this run's parameters to the settings file. |
 | `-h`, `--help` | — | Show help (in the interface language). |
+| `--version` | — | Print the program version and exit. |
 
-In the windowed `.exe` there is no console of its own: `--list` and `--help` attach to the console they were started from.
+In the windowed `.exe` there is no console of its own: `--list`, `--help` and `--version` attach to the console they were started from.
 
 ### Settings file
 
@@ -469,6 +471,12 @@ Details worth knowing:
 - A `--onefile` executable unpacks itself to a temporary folder on every launch (1–3 s) and is ~40–60 MB because of numpy and Pillow. Use `--onedir` for faster start-up.
 - Unsigned PyInstaller binaries are sometimes flagged by antivirus software (false positives are common with `pywin32`). Sign the executable or add an exclusion if needed.
 - The `.bat` file must have Windows (CRLF) line endings.
+
+**Publishing a release.** The built `dist\WindowStream.exe` is not stored in git (`dist/` is ignored); attach it to a GitHub release instead:
+
+1. Set `__version__` in `window_stream.py` (semantic versioning, e.g. `1.0.0`), commit and merge to `main`.
+2. Build with `build_exe.bat` and check the result: `dist\WindowStream.exe --version` from a console.
+3. On GitHub: **Releases → Draft a new release**, create the tag `v<version>` (it must match `__version__`) on `main`, attach `WindowStream.exe`, add the SHA-256 (`Get-FileHash dist\WindowStream.exe` in PowerShell) and the change notes.
 
 ---
 
