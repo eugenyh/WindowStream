@@ -1168,7 +1168,7 @@ def load_settings(path):
             except (TypeError, ValueError):
                 print(T("setting_invalid", key=key))
     if s["mode"] not in ("screen", "printwindow"):
-        s["mode"] = "screen"
+        s["mode"] = DEFAULT_SETTINGS["mode"]
     s["language"] = str(s["language"]).strip().lower()
     if s["language"] not in I18N:
         s["language"] = "en"

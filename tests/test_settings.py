@@ -96,8 +96,10 @@ class SettingsTests(unittest.TestCase):
         s, _ = self.load()
         self.assertEqual(EXPECTED_DEFAULTS, s)
 
-    def test_invalid_mode_falls_back_to_screen(self):
+    def test_invalid_mode_falls_back_to_default(self):
         self.write({"mode": "magic"})
+        self.assertEqual("printwindow", self.load()[0]["mode"])
+        self.write({"mode": "screen"})
         self.assertEqual("screen", self.load()[0]["mode"])
         self.write({"mode": "printwindow"})
         self.assertEqual("printwindow", self.load()[0]["mode"])
