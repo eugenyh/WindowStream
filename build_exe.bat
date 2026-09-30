@@ -1,16 +1,16 @@
 @echo off
-chcp 65001 >nul
-rem Сборка автономного WindowStream.exe (PyInstaller). Запускать в папке со скриптом.
-rem Перед сборкой должны быть установлены: pip install pywin32 pillow mss pystray numpy PyTurboJPEG
+rem Builds the standalone WindowStream.exe (PyInstaller). Run it in the folder with the script.
+rem Install first: pip install pywin32 pillow mss pystray numpy PyTurboJPEG
 setlocal
 
-rem Библиотека libjpeg-turbo кладётся внутрь exe, чтобы на других ПК ничего ставить не нужно
-set TJ=D:\libjpeg-turbo64\bin\turbojpeg.dll
+rem libjpeg-turbo is bundled into the exe so nothing has to be installed on other PCs
+set TJ=C:\libjpeg-turbo64\bin\turbojpeg.dll
+if not exist "%TJ%" set TJ=D:\libjpeg-turbo64\bin\turbojpeg.dll
 set EXTRA=
 if exist "%TJ%" (
     set EXTRA=--add-binary "%TJ%;."
 ) else (
-    echo ВНИМАНИЕ: %TJ% не найден - exe будет кодировать через Pillow ^(медленнее^).
+    echo WARNING: turbojpeg.dll not found in C:\libjpeg-turbo64 or D:\libjpeg-turbo64 - the exe will encode with Pillow ^(slower^).
 )
 
 python -m pip install --upgrade pyinstaller || goto :error
@@ -23,11 +23,9 @@ python -m PyInstaller --noconfirm --clean --onefile --noconsole ^
     %EXTRA% window_stream.py || goto :error
 
 echo.
-echo Готово: dist\WindowStream.exe
+echo Done: dist\WindowStream.exe
 goto :eof
 
 :error
-echo Сборка не удалась.
+echo Build failed.
 exit /b 1
-
-pause

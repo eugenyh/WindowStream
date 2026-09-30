@@ -1,4 +1,4 @@
-"""Рисует icon.ico для exe: зелёный круг с треугольником «play» (как значок в трее)."""
+"""Draws icon.ico for the exe: a green circle with a \"play\" triangle (like the tray icon)."""
 from PIL import Image, ImageDraw
 
 
@@ -14,4 +14,4 @@ def draw(size):
 if __name__ == "__main__":
     base = draw(256)
     base.save("icon.ico", sizes=[(s, s) for s in (16, 24, 32, 48, 64, 128, 256)])
-    print("icon.ico создан")
+    print("icon.ico created")
