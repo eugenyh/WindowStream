@@ -6,7 +6,7 @@ WindowStream is a small Windows tray application written in Python. It captures 
 
 It was built for a concrete need — showing a map application running on a work PC on an Android tablet over Wi-Fi — but it works with any window.
 
-> **UI language.** The tray menu, notifications and the web viewer are currently in **Russian**. Every menu item is listed with its English translation in [Tray menu](#tray-menu).
+> **UI language.** The tray menu, notifications, console messages and the web viewer are in **English** by default. Set `"language": "ru"` in the [settings file](#settings-file) for Russian (see [Interface language](#interface-language)). Every tray menu item is listed in both languages in [Tray icon and menu](#tray-icon-and-menu). User manuals for the ready-made `.exe` are available in Russian (`user_manual_ru.md`), English (`user_manual_en.md`) and German (`user_manual_de.md`).
 
 ---
 
@@ -23,6 +23,7 @@ It was built for a concrete need — showing a map application running on a work
   - [The web viewer](#the-web-viewer)
   - [Command-line reference](#command-line-reference)
   - [Settings file](#settings-file)
+  - [Interface language](#interface-language)
   - [Start with Windows](#start-with-windows)
   - [Single instance and multiple instances](#single-instance-and-multiple-instances)
 - [Capture modes](#capture-modes)
@@ -55,6 +56,7 @@ It was built for a concrete need — showing a map application running on a work
 - Menu: start, pause/resume, stop, pick the window from a list of open windows, bring the window to the front, toggle *start with Windows*, open the settings file, exit.
 - Tooltip shows the real capture rate, the rate of new frames, the number of connected viewers and the address to open.
 - Notifications for start, errors and waiting for the window.
+- Bilingual interface (English by default, Russian on request).
 
 **Convenience**
 
@@ -67,7 +69,7 @@ It was built for a concrete need — showing a map application running on a work
 **Web viewer**
 
 - Rounded "bezel" frame filling the whole browser window; the picture is fitted with the aspect ratio kept.
-- Status badge in the top-right corner: *Transmitting* / *Paused* / *No connection*; the frame glow follows the state.
+- Status badge in the top-right corner: *Live* / *Paused* / *No connection*; the frame glow follows the state.
 - Pinch-to-zoom (up to ×8), drag to pan, double-tap to zoom in/out, mouse wheel on desktop.
 - Live *fps* and *latency* readout (long-press to hide/show).
 - The badge and buttons auto-hide during normal streaming and reappear on tap; they stay visible on pause and connection loss.
@@ -121,7 +123,7 @@ It was built for a concrete need — showing a map application running on a work
 
 - Windows 10 / 11
 - Python 3.9 or newer (64-bit)
-- Packages:
+- Packages (also listed in `requirements.txt`):
 
 | Package | Used for | Required |
 | --- | --- | --- |
@@ -153,7 +155,7 @@ cd WindowStream
 python -m venv .venv
 .venv\Scripts\activate
 
-pip install pywin32 pillow mss pystray numpy PyTurboJPEG
+pip install -r requirements.txt
 ```
 
 **Optional but recommended — libjpeg-turbo.** PyTurboJPEG needs the native library. Download the official *libjpeg-turbo* installer for Visual C++ (64-bit) from the project's releases page and install it to the default folder `C:\libjpeg-turbo64`. Without it the program prints a notice and encodes with Pillow, which works but uses more CPU.
@@ -171,7 +173,7 @@ To run without a console window use `pythonw window_stream.py`.
 ## Quick start
 
 1. Start the program. A grey icon appears in the notification area (it may be under the ^ *Show hidden icons* arrow).
-2. Right-click the icon → **Окно: не выбрано** (*Window: not selected*) → choose the window to share. The broadcast starts immediately and the icon turns green.
+2. Right-click the icon → **Window: not selected** → choose the window to share. The broadcast starts immediately and the icon turns green.
 3. Hover the icon: the tooltip shows the address, for example `http://192.168.1.20:8080/`.
 4. Open that address in the browser of the tablet (same network).
 5. Done. Next time the program starts, it remembers the window and begins streaming by itself.
@@ -199,37 +201,38 @@ python window_stream.py --title "Untitled - Map" --mode printwindow --save
 **Tooltip** (streaming):
 
 ```
-Трансляция окна: идёт
-Захват 10 к/с · новых кадров 3 к/с · клиентов 1
+Window broadcast: live
+Capture 10 fps · new frames 3 fps · clients 1
 http://192.168.1.20:8080/
 ```
 
-- *Захват* (capture) — how many times per second the window is actually grabbed.
-- *новых кадров* (new frames) — how many changed frames per second are encoded and sent. It is `0` while the picture does not change; that is normal.
-- *клиентов* (clients) — number of open viewer connections.
+- *Capture* — how many times per second the window is actually grabbed.
+- *new frames* — how many changed frames per second are encoded and sent. It is `0` while the picture does not change; that is normal.
+- *clients* — number of open viewer connections.
 
 **Tray menu**
 
-| Menu item (Russian) | English | What it does |
+| Menu item (English, default) | Russian (`"language": "ru"`) | What it does |
 | --- | --- | --- |
-| Начать трансляцию | Start broadcast | Starts the server and capture. Enabled when stopped. |
-| Пауза / Продолжить | Pause / Resume | Freezes capture. Viewers keep the last frame and see *Paused*. |
-| Закончить трансляцию | Stop broadcast | Stops capture and closes the server and all connections. |
-| Окно: *title* ▸ | Window: *title* ▸ | Submenu listing open windows; the current one is marked. Selecting a window saves it, brings it to the front and restarts the broadcast on it. |
-| Вывести окно на передний план | Bring window to front | Restores (if minimized) and activates the streamed window. |
-| Запускать вместе с Windows | Start with Windows | Toggles the autostart registry entry. |
-| Открыть файл настроек | Open settings file | Opens the JSON settings in Notepad. |
-| Выйти | Exit | Stops everything and quits. |
+| Start broadcast | Начать трансляцию | Starts the server and capture. Enabled when stopped. |
+| Pause / Resume | Пауза / Продолжить | Freezes capture. Viewers keep the last frame and see *Paused*. |
+| Stop broadcast | Закончить трансляцию | Stops capture and closes the server and all connections. |
+| Window: *title* ▸ (or *Window: not selected*) | Окно: *title* ▸ (or *Окно: не выбрано*) | Submenu listing open windows; the current one is marked. Selecting a window saves it, brings it to the front and restarts the broadcast on it. |
+| Bring window to front | Вывести окно на передний план | Restores (if minimized) and activates the streamed window. |
+| Start with Windows | Запускать вместе с Windows | Toggles the autostart registry entry. |
+| Open settings file | Открыть файл настроек | Opens the JSON settings in Notepad. |
+| Exit | Выйти | Stops everything and quits. |
 
 **Notifications** (Windows toast / balloon)
 
-| Text (Russian) | Meaning |
-| --- | --- |
-| Трансляция запущена — Откройте на планшете: *url* | Broadcast started |
-| Окно «…» не найдено. Жду появления окна... | Target window is not open yet; retrying every 5 s |
-| Окно не выбрано / Выберите окно в меню иконки: пункт «Окно» | No window configured yet |
-| Не удалось открыть порт *N* | The port is in use by another program |
-| Программа будет запускаться вместе с Windows / Автозапуск отключён | Autostart toggled |
+| Text (English, default) | Russian | Meaning |
+| --- | --- | --- |
+| Broadcast started — Open on the tablet: *url* | Трансляция запущена — Откройте на планшете: *url* | Broadcast started |
+| Streaming: *title* + *url* | Транслируется: *title* + *url* | Broadcast switched to the window chosen in the menu |
+| Window "…" not found. Waiting for the window to appear... | Окно «…» не найдено. Жду появления окна... | Target window is not open yet; retrying every 5 s |
+| No window selected: choose one in the tray menu ("Window" item) / Choose a window in the tray menu: "Window" item | Окно не выбрано: выберите его в меню трея (пункт «Окно») / Выберите окно в меню иконки: пункт «Окно» | No window configured yet |
+| Could not open port *N*: … | Не удалось открыть порт *N*: … | The port is in use by another program |
+| The program will start with Windows / Autostart disabled | Программа будет запускаться вместе с Windows / Автозапуск отключён | Autostart toggled |
 
 ### Choosing the window
 
@@ -254,11 +257,11 @@ Tip: run `WindowStream.exe --list` from a console to print handle, process and t
 
 | Badge | State |
 | --- | --- |
-| green pulsing dot, **Транслируется** | Live |
-| amber dot, **Пауза** | Paused on the PC — the picture is frozen and dimmed |
-| red dot, **Нет связи** | The PC is unreachable or the broadcast is stopped — the picture is greyed out with an overlay; the page reconnects automatically |
+| green pulsing dot, **Live** | Live |
+| amber dot, **Paused** | Paused on the PC — the picture is frozen and dimmed |
+| red dot, **No connection** | The PC is unreachable or the broadcast is stopped — the picture is greyed out with an overlay; the page reconnects automatically |
 
-While live, the badge shows `N fps · M мс` (received new frames per second · estimated latency).
+While live, the badge shows `N fps · M ms` (received new frames per second · estimated latency). In Russian mode the labels are *Транслируется* / *Пауза* / *Нет связи* and `мс`.
 
 **Controls**
 
@@ -268,7 +271,7 @@ While live, the badge shows `N fps · M мс` (received new frames per second ·
 | Pinch with two fingers | Zoom, up to ×8 |
 | Drag with one finger (when zoomed) | Pan |
 | Double-tap | Zoom in ×2.5 at that point / reset if already zoomed |
-| Tap the `×N · сброс` pill (bottom right) | Reset zoom |
+| Tap the `×N · reset` pill (bottom right) | Reset zoom |
 | Long-press (~0.7 s) | Hide / show the fps · latency readout (remembered in the browser) |
 | Button in the top-left corner | Fullscreen on/off |
 | Mouse wheel (desktop) | Zoom around the cursor |
@@ -298,13 +301,13 @@ WindowStream.exe [options]
 | `--no-autostart` | off | Do **not** start broadcasting on launch; wait for the menu. (Unrelated to *Start with Windows*.) |
 | `--config PATH` | `%APPDATA%\WindowStream\settings.json` | Use another settings file. |
 | `--save` | off | Write this run's parameters to the settings file. |
-| `-h`, `--help` | — | Show help. |
+| `-h`, `--help` | — | Show help (in the interface language). |
 
 In the windowed `.exe` there is no console of its own: `--list` and `--help` attach to the console they were started from.
 
 ### Settings file
 
-Location: `%APPDATA%\WindowStream\settings.json`. It is created on the first run from the effective parameters of that run. Use the tray item *Открыть файл настроек* to edit it; **restart the program** after editing.
+Location: `%APPDATA%\WindowStream\settings.json`. It is created on the first run from the effective parameters of that run. Use the tray item *Open settings file* to edit it; **restart the program** after editing.
 
 ```json
 {
@@ -338,9 +341,15 @@ Location: `%APPDATA%\WindowStream\settings.json`. It is created on the first run
 
 **Precedence:** command-line options override the file. Boolean switches can only turn a feature *on* from the command line; to turn one off, edit the file. `--save` stores `title`, `process`, `port`, `fps`, `quality`, `scale`, `mode`, `no_diff` and `no_turbo` (not `autostart_broadcast` or `language`). A malformed file is ignored (defaults are used); wrong values of individual keys are skipped.
 
+### Interface language
+
+All user-visible text lives in the `I18N` dictionary in `window_stream.py` (`en` and `ru`), looked up with `T(key, **kw)`. The language is chosen once at startup from the `language` key of the settings file; an unknown value falls back to English. There is no command-line switch for it, so it is never written by `--save`.
+
+The web page uses `@@key@@` tokens that are replaced with the `web_*` strings when the page is served, so the viewer follows the same language as the tray. To add a language, add a complete set of keys to `I18N` (the key sets of all languages must match).
+
 ### Start with Windows
 
-The tray item **Запускать вместе с Windows** adds or removes the value `WindowStream` under
+The tray item **Start with Windows** adds or removes the value `WindowStream` under
 
 ```
 HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
@@ -356,7 +365,7 @@ No administrator rights are needed and it applies to the current user only.
 
 ### Single instance and multiple instances
 
-A named mutex (`Local\WindowStream_<hash of the settings-file path>`) prevents starting a second copy that uses the same settings file. The second copy shows *"Программа уже работает"* and exits. `--list` and `--help` still work while another copy is running.
+A named mutex (`Local\WindowStream_<hash of the settings-file path>`) prevents starting a second copy that uses the same settings file. The second copy shows *"The program is already running."* and exits. `--list` and `--help` still work while another copy is running.
 
 To stream two windows at once, run two copies with **different** `--config` files and different ports.
 
@@ -481,12 +490,12 @@ Details worth knowing:
 | --- | --- |
 | The tablet cannot open the page | Different network or client isolation on the router; Windows Firewall blocking (allow private networks); wrong address (`169.254.x.x`) — check with `ipconfig` and use the one from the tablet's network. |
 | Tray icon not visible | Click the ^ *Show hidden icons* arrow in the taskbar and drag the icon out. |
-| "Не удалось открыть порт" | Another program (or another copy with the same port) uses it. Change `port`. |
+| "Could not open port …" | Another program (or another copy with the same port) uses it. Change `port`. |
 | Stream shows other windows over the target | `screen` mode copies the screen. Use `--mode printwindow`, or bring the window to the front. |
 | Black picture | `printwindow` with a GPU-rendered window: switch to `screen`. |
 | Part of the window is frozen | That part is outside the screen; Windows does not repaint it. Move the window fully on screen, use another monitor or a virtual display. |
-| Picture frozen, badge says *Transmitting* | The window is minimized (not captured). Restore it or use *Вывести окно на передний план*. |
-| `0 fps` / `0 к/с` new frames | The picture is not changing — normal with change detection. |
+| Picture frozen, badge says *Live* | The window is minimized (not captured). Restore it or use *Bring window to front*. |
+| `new frames 0 fps` in the tooltip | The picture is not changing — normal with change detection. |
 | After switching windows the old picture stays | In `screen` mode the new window is probably behind another one; it is now brought to the front on selection. |
 | High CPU | Lower `fps`, use `scale 0.5–0.75`, install libjpeg-turbo, check the tooltip. |
 | Latency shows `—` | It needs a couple of seconds after connecting to synchronise clocks. |
@@ -494,6 +503,7 @@ Details worth knowing:
 | Window of an "Run as administrator" application is not captured | Run WindowStream elevated as well (Windows blocks messaging to higher-privilege windows; `PrintWindow` may fail). |
 | Antivirus flags the `.exe` | Common false positive for PyInstaller builds; sign the file or add an exclusion. |
 | Settings are ignored | JSON syntax error (the file is then ignored). Fix it or delete it to regenerate. |
+| Interface is in the wrong language | Check `"language"` in the settings file (`"en"` or `"ru"`) and restart the program. |
 
 ---
 
@@ -506,28 +516,35 @@ Details worth knowing:
 - `printwindow` does not work correctly with every GPU-rendered application; DRM-protected video is black in both modes.
 - Plain HTTP only; no authentication.
 - Settings changes made by editing the file take effect after a restart.
-- The user interface is Russian-only.
+- The user interface is available in English and Russian only (`language` setting); the German user manual describes the English interface.
 
 ---
 
 ## Project layout and code map
 
 ```
-window_stream.py   the whole application (single file)
-build_exe.bat      PyInstaller build script (CRLF line endings)
-make_icon.py       generates icon.ico for the executable
+window_stream.py    the whole application (single file)
+requirements.txt    runtime dependencies (CRLF line endings)
+build_exe.bat       PyInstaller build script (CRLF line endings)
+make_icon.py        generates icon.ico for the executable
+README.md           this file
+user_manual_ru.md   user manual for the ready-made exe (Russian)
+user_manual_en.md   user manual for the ready-made exe (English)
+user_manual_de.md   user manual for the ready-made exe (German)
+LICENSE             MIT license text
 ```
 
 Main parts of `window_stream.py`:
 
 | Part | Role |
 | --- | --- |
+| `I18N`, `T`, `LANG` | Interface strings (`en`/`ru`), lookup function and the current language |
 | `list_windows`, `find_window`, `app_windows`, `process_name`, `bring_to_front` | Window discovery, matching and activation |
 | `grab_screen`, `grab_printwindow` | The two capture back-ends; both return a raw BGRX buffer plus its size |
 | `FrameBuffer` | Latest frame + sequence number + timestamp + client counter, guarded by a condition variable |
 | `encode_jpeg` | TurboJPEG (direct or after Pillow resize) or Pillow |
 | `capture_loop` | Grab → CRC32 → encode → publish; handles pause, minimized and vanished windows |
-| `PAGE`, `page_for` | The embedded web viewer (HTML/CSS/JS) and the title injection |
+| `PAGE`, `page_for` | The embedded web viewer (HTML/CSS/JS with `@@key@@` tokens) and the title/language injection |
 | `make_handler` | HTTP routes: `/`, `/status`, `/snapshot.jpg`, `/stream` |
 | `Broadcaster` | Start / pause / stop, threads, per-second statistics |
 | `load_settings`, `save_settings` | JSON settings with type coercion and defaults |
@@ -536,10 +553,10 @@ Main parts of `window_stream.py`:
 | `TrayIcon` | `pystray.Icon` subclass that rebuilds the menu right before it is shown (pystray builds the Windows menu only once), so the window list and check marks are always current |
 | `main` | Argument parsing, precedence rules, tray menu wiring |
 
-The web viewer is a single self-contained HTML document embedded in the script as a raw string; it can be edited in place.
+The web viewer is a single self-contained HTML document embedded in the script as a raw string; it can be edited in place. `page_for()` replaces the `<title>Map</title>` placeholder and the `@@…@@` tokens, so keep those placeholders intact when editing `PAGE`.
 
 ---
 
 ## License
 
-MIT License. 
+MIT License — see [LICENSE](LICENSE).
