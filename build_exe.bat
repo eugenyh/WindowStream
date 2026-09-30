@@ -29,3 +29,5 @@ goto :eof
 :error
 echo Сборка не удалась.
 exit /b 1
+
+pause
