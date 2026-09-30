@@ -1,0 +1,10 @@
+# WindowStream runtime dependencies (Windows only)
+pywin32
+pillow
+mss
+pystray
+numpy
+PyTurboJPEG
+
+# Only needed to build the standalone exe (build_exe.bat installs it itself)
+# pyinstaller

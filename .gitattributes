@@ -1,2 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Windows-only files must keep CRLF line endings exactly as committed
+# (no normalization), so downloads and ZIP archives are correct too
+*.bat -text
+requirements.txt -text
