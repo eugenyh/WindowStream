@@ -333,12 +333,13 @@ WindowStream.exe --title "Untitled - Map" --mode printwindow --save
 | `--config "path"` | Use another settings file. |
 | `--save` | Save this run's parameters to the settings file. |
 | `--help` | Help on the switches. |
+| `--version` | Show the program version and exit. |
 
 **Priorities.** Command-line switches take precedence over the settings file, but they do not get into the file by themselves unless you specify `--save`. Toggle switches (`--no-diff`, `--no-turbo`) can only be turned on; to turn such a parameter off, edit the settings file.
 
 ### List of windows
 
-The built program has no console window of its own, so `--list` and `--help` print their text to **the command prompt from which they are run**:
+The built program has no console window of its own, so `--list`, `--help` and `--version` print their text to **the command prompt from which they are run**:
 
 ```
 WindowStream.exe --list
