@@ -345,7 +345,7 @@ The built program has no console window of its own, so `--list`, `--help` and `-
 WindowStream.exe --list
 ```
 
-If you run this command by double-clicking, there is nowhere to show the text.
+The command prompt may return before the text appears, because the program is a windowed application. To make it wait, use `start /wait "" WindowStream.exe --list`. If there is no console to print to (for example when you start the program by double-clicking), the text is shown in a message box.
 
 ## 12. Start with Windows
 
