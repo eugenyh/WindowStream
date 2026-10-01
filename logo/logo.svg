@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="WindowStream logo">
+  <!-- WindowStream logo: a window frame with a play triangle and broadcast arcs -->
+  <defs>
+    <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="20" y1="6" x2="250" y2="212">
+      <stop offset="0" stop-color="#4BE08F"/>
+      <stop offset="1" stop-color="#169A52"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(-7 16)" fill="none" stroke="url(#g)" stroke-linecap="round" stroke-linejoin="round">
+    <!-- window frame -->
+    <rect x="20" y="80" width="152" height="132" rx="20" stroke-width="10"/>
+    <!-- title bar divider -->
+    <line x1="20" y1="110" x2="172" y2="110" stroke-width="6" opacity="0.55"/>
+    <!-- play triangle -->
+    <path d="M84 136 L84 186 L126 161 Z" fill="url(#g)" stroke-width="8"/>
+    <!-- broadcast arcs -->
+    <path d="M190 46 A20 20 0 0 1 210 66" stroke-width="9"/>
+    <path d="M190 26 A40 40 0 0 1 230 66" stroke-width="9" opacity="0.8"/>
+    <path d="M190 6 A60 60 0 0 1 250 66" stroke-width="9" opacity="0.55"/>
+    <!-- emitter dot -->
+    <circle cx="190" cy="66" r="7" fill="url(#g)" stroke="none"/>
+  </g>
+</svg>
