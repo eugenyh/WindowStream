@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 420" width="1000" height="420" role="img" aria-label="WindowStream header">
+  <!-- WindowStream article header, 1000x420 -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0A1A14"/>
+      <stop offset="1" stop-color="#0F2D21"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="280" cy="152" r="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2FD27A" stop-opacity="0.30"/>
+      <stop offset="0.45" stop-color="#2FD27A" stop-opacity="0.07"/>
+      <stop offset="1" stop-color="#2FD27A" stop-opacity="0"/>
+    </radialGradient>
+    <!-- logo gradient (same colors as logo.svg, in logo coordinates) -->
+    <linearGradient id="g" gradientUnits="userSpaceOnUse" x1="20" y1="-10" x2="250" y2="196">
+      <stop offset="0" stop-color="#4BE08F"/>
+      <stop offset="1" stop-color="#169A52"/>
+    </linearGradient>
+    <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#B8F5D3"/>
+    </linearGradient>
+    <clipPath id="frame"><rect width="1000" height="420"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#frame)">
+    <rect width="1000" height="420" fill="url(#bg)"/>
+    <rect width="1000" height="420" fill="url(#glow)"/>
+
+    <!-- faint broadcast rings centered on the logo emitter -->
+    <g fill="none" stroke="#4BE08F" stroke-width="1.5">
+      <circle cx="280" cy="152" r="150" opacity="0.15"/>
+      <circle cx="280" cy="152" r="235" opacity="0.10"/>
+      <circle cx="280" cy="152" r="330" opacity="0.07"/>
+      <circle cx="280" cy="152" r="440" opacity="0.05"/>
+      <circle cx="280" cy="152" r="560" opacity="0.035"/>
+      <circle cx="280" cy="152" r="690" opacity="0.025"/>
+    </g>
+
+    <!-- logo (scaled 1.35) -->
+    <g transform="translate(24 63) scale(1.35)" fill="none" stroke="url(#g)" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="20" y="64" width="152" height="132" rx="20" stroke-width="10"/>
+      <line x1="20" y1="94" x2="172" y2="94" stroke-width="6" opacity="0.55"/>
+      <path d="M84 120 L84 170 L126 145 Z" fill="url(#g)" stroke-width="8"/>
+      <path d="M190 30 A20 20 0 0 1 210 50" stroke-width="9"/>
+      <path d="M190 10 A40 40 0 0 1 230 50" stroke-width="9" opacity="0.8"/>
+      <path d="M190 -10 A60 60 0 0 1 250 50" stroke-width="9" opacity="0.55"/>
+      <circle cx="190" cy="50" r="7" fill="url(#g)" stroke="none"/>
+    </g>
+
+    <!-- thin vertical separator -->
+    <line x1="412" y1="110" x2="412" y2="300" stroke="#4BE08F" stroke-opacity="0.25" stroke-width="1.5"/>
+
+    <!-- text -->
+    <g font-family="Carlito, Calibri, 'Segoe UI', Arial, sans-serif">
+      <text x="446" y="206" font-size="78" font-weight="700" letter-spacing="-1" fill="url(#title)">WindowStream</text>
+      <text x="450" y="254" font-size="28" fill="#9FD9B9">One Windows window. Any browser. Live.</text>
+
+      <!-- chips -->
+      <g font-size="16" fill="#7FE0AB" letter-spacing="1.4">
+        <rect x="450" y="282" width="100" height="32" rx="16" fill="none" stroke="#4BE08F" stroke-opacity="0.45"/>
+        <text x="500" y="303" text-anchor="middle">MJPEG</text>
+        <rect x="562" y="282" width="152" height="32" rx="16" fill="none" stroke="#4BE08F" stroke-opacity="0.45"/>
+        <text x="638" y="303" text-anchor="middle">LOCAL NETWORK</text>
+        <rect x="726" y="282" width="120" height="32" rx="16" fill="none" stroke="#4BE08F" stroke-opacity="0.45"/>
+        <text x="786" y="303" text-anchor="middle">VIEW-ONLY</text>
+      </g>
+    </g>
+  </g>
+</svg>
