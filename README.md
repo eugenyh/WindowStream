@@ -80,22 +80,7 @@ It was built for a concrete need — showing a map application running on a work
 
 ## How it works
 
-```
-          Windows PC                                            Viewer (tablet / phone / PC)
- ┌─────────────────────────────────────────────────────────────────────────────────────┐        ┌───────────────────────────┐
- │  target window                                                                      │        │  browser                  │
- │       │  screen copy (mss)  or  PrintWindow                                         │        │   GET /          (page)   │
- │       ▼                                                                             │        │   GET /status    (1 Hz)   │
- │  capture thread ──► CRC32 changed? ──► JPEG                                         │  HTTP  │   GET /stream    (MJPEG)  │
- │                                        │                                            │ ─────► │        │                  │
- │                                        ▼                                            │        │        ▼                  │
- │                                  FrameBuffer                                        │        │  parse frames, show, zoom │
- │                                        │                                            │        └───────────────────────────┘
- │                     HTTP server threads (one per viewer)                            │
- │                                                                                     │                           
- │  tray icon (main thread) ◄─► Broadcaster (start / pause / stop, window switching)   │
- └─────────────────────────────────────────────────────────────────────────────────────┘
-```
+![Windows PC to Viewer Streaming Architecture](img\Architecture.jpg "Architecture")
 
 **Threads**
 
