@@ -80,7 +80,7 @@ It was built for a concrete need — showing a map application running on a work
 
 ## How it works
 
-![Windows PC to Viewer Streaming Architecture](tree/main/Img/Architecture.jpg "Architecture")
+![Windows PC to Viewer Streaming Architecture](/tree/main/Img/Architecture.jpg "Architecture")
 
 **Threads**
 
